@@ -1,0 +1,14 @@
+{
+  "name": "events split across chunks, ids, comments, CRLF and multi-line data",
+  "chunks": [
+    "event: hello\ndata: {\"boot\":\"b1\"}\n\n: ping\n\nid: 12\nevent: sig",
+    "nal\ndata: {\"seq\":12}\n\nevent: control\r\ndata: {\"epoch\":3}\r\n\r\n",
+    "data: line1\ndata: line2\n\n"
+  ],
+  "events": [
+    { "event": "hello", "id": null, "data": "{\"boot\":\"b1\"}" },
+    { "event": "signal", "id": "12", "data": "{\"seq\":12}" },
+    { "event": "control", "id": null, "data": "{\"epoch\":3}" },
+    { "event": "message", "id": null, "data": "line1\nline2" }
+  ]
+}

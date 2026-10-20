@@ -1,0 +1,48 @@
+{
+  "name": "soritrading-watch-together",
+  "version": "0.1.0",
+  "description": "WATCH TOGETHER connector for JavaScript/TypeScript — signals, conditions and exchange rate-limit coordination with a local SoriTrading agent.",
+  "license": "MIT",
+  "author": "Value Connect Global Inc.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valueconnectinc/soritrading-watch-together.git",
+    "directory": "js"
+  },
+  "homepage": "https://github.com/valueconnectinc/soritrading-watch-together#readme",
+  "bugs": {
+    "url": "https://github.com/valueconnectinc/soritrading-watch-together/issues"
+  },
+  "keywords": [
+    "soritrading",
+    "trading",
+    "websocket",
+    "sse",
+    "rate-limit"
+  ],
+  "type": "module",
+  "main": "./index.mjs",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

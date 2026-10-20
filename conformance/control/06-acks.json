@@ -1,0 +1,22 @@
+{
+  "name": "acknowledge used exchanges once per level change; renewals do not re-acknowledge",
+  "uses": ["binance", "okx"],
+  "steps": [
+    { "at": 0, "control": { "v": 1, "boot": "b1", "epoch": 1, "yield": {}, "frozen": {}, "notice": null } },
+    { "at": 0, "expect": { "acks": [] } },
+    { "at": 100, "control": { "v": 1, "boot": "b1", "epoch": 2, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "hard", "why": ["focus"], "ttlMs": 30000 },
+        "upbit": { "level": "hard", "why": ["focus"], "ttlMs": 30000 } } } },
+    { "at": 100, "expect": { "acks": [ { "epoch": 2, "ex": "binance", "level": "hard" } ] } },
+    { "at": 10100, "control": { "v": 1, "boot": "b1", "epoch": 2, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "hard", "why": ["focus"], "ttlMs": 30000 },
+        "upbit": { "level": "hard", "why": ["focus"], "ttlMs": 30000 } } } },
+    { "at": 10100, "expect": { "acks": [] } },
+    { "at": 10200, "control": { "v": 1, "boot": "b1", "epoch": 3, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "soft", "why": ["focus-soon"], "ttlMs": 30000 },
+        "*": { "level": "hard", "why": ["focus"], "ttlMs": 30000 } } } },
+    { "at": 10200, "expect": { "level": { "binance": "hard", "okx": "hard" }, "acks": [ { "epoch": 3, "ex": "okx", "level": "hard" } ] } },
+    { "at": 10300, "control": { "v": 1, "boot": "b1", "epoch": 4, "yield": {}, "frozen": {}, "notice": null } },
+    { "at": 10300, "expect": { "acks": [ { "epoch": 4, "ex": "binance", "level": "free" }, { "epoch": 4, "ex": "okx", "level": "free" } ] } }
+  ]
+}

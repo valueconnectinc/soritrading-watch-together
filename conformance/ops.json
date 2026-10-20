@@ -1,0 +1,4 @@
+{ "v": 1, "ops": ["status", "conds.list", "conds.add", "conds.del", "signals.since", "peers", "usage",
+  "control.state", "control.ack", "client.register", "usage.report"],
+  "openOps": ["status", "usage", "control.state", "control.ack", "client.register", "usage.report"],
+  "events": ["hello", "gate", "signal", "control"] }

@@ -1,0 +1,16 @@
+{
+  "name": "frozen is relative to receipt; notice is kept until the next state",
+  "uses": [],
+  "steps": [
+    { "at": 5000, "control": { "v": 1, "boot": "b1", "epoch": 1, "notice": null,
+        "yield": { "bybit": { "level": "hard", "why": ["frozen"], "ttlMs": 30000 } },
+        "frozen": { "bybit": { "untilMs": 4200, "why": "429" } } } },
+    { "at": 9199, "expect": { "level": { "bybit": "hard" }, "frozen": { "bybit": true, "okx": false } } },
+    { "at": 9200, "expect": { "frozen": { "bybit": false } } },
+    { "at": 9300, "control": { "v": 1, "boot": "b1", "epoch": 2, "yield": {}, "frozen": {},
+        "notice": { "kind": "restart", "inMs": 0, "why": "update" } } },
+    { "at": 9300, "expect": { "level": { "bybit": "free" }, "notice": { "kind": "restart", "inMs": 0, "why": "update" } } },
+    { "at": 9400, "control": { "v": 1, "boot": "b2", "epoch": 1, "yield": {}, "frozen": {}, "notice": null } },
+    { "at": 9400, "expect": { "notice": null } }
+  ]
+}

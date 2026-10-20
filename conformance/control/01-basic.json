@@ -1,0 +1,16 @@
+{
+  "name": "unknown before the first state, then per-exchange levels and the * entry",
+  "uses": [],
+  "steps": [
+    { "at": 0, "expect": { "known": false, "level": { "binance": "unknown" } } },
+    { "at": 100, "control": { "v": 1, "boot": "b1", "epoch": 1, "yield": {}, "frozen": {}, "notice": null } },
+    { "at": 100, "expect": { "known": true, "level": { "binance": "free", "upbit": "free" } } },
+    { "at": 200, "control": { "v": 1, "boot": "b1", "epoch": 2, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "hard", "why": ["focus"], "ttlMs": 30000 },
+        "*": { "level": "soft", "why": ["focus-soon"], "ttlMs": 30000 } } } },
+    { "at": 300, "expect": { "level": { "binance": "hard", "upbit": "soft", "okx": "soft" } } },
+    { "at": 400, "control": { "v": 1, "boot": "b1", "epoch": 3, "frozen": {}, "notice": null, "yield": {
+        "upbit": { "level": "soft", "why": ["focus-soon"], "ttlMs": 30000 } } } },
+    { "at": 500, "expect": { "level": { "binance": "free", "upbit": "soft", "okx": "free" } } }
+  ]
+}

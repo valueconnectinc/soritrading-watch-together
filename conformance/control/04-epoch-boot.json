@@ -1,0 +1,12 @@
+{
+  "name": "an older epoch in the same boot is ignored; a new boot starts over",
+  "uses": [],
+  "steps": [
+    { "at": 0, "control": { "v": 1, "boot": "b1", "epoch": 5, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "hard", "why": ["focus"], "ttlMs": 30000 } } } },
+    { "at": 10, "control": { "v": 1, "boot": "b1", "epoch": 4, "frozen": {}, "notice": null, "yield": {} } },
+    { "at": 20, "expect": { "level": { "binance": "hard" } } },
+    { "at": 30, "control": { "v": 1, "boot": "b2", "epoch": 1, "frozen": {}, "notice": null, "yield": {} } },
+    { "at": 40, "expect": { "level": { "binance": "free" } } }
+  ]
+}

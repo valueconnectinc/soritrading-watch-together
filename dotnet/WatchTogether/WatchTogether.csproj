@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <PackageId>SoriTrading.WatchTogether</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Value Connect Global Inc.</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/valueconnectinc/soritrading-watch-together</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/valueconnectinc/soritrading-watch-together</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>soritrading;trading;websocket;sse;rate-limit</PackageTags>
+    <Description>Client for the SoriTrading agent's local API: WATCH TOGETHER signals and exchange rate-limit coordination.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

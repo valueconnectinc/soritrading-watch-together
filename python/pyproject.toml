@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soritrading-watch-together"
+version = "0.1.0"
+description = "Client for the SoriTrading agent's local API: WATCH TOGETHER signals and exchange rate-limit coordination"
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["soritrading", "trading", "websocket", "sse", "rate-limit"]
+authors = [{ name = "Value Connect Global Inc." }]
+requires-python = ">=3.8"
+dependencies = []
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Framework :: AsyncIO",
+]
+
+[project.urls]
+Homepage = "https://github.com/valueconnectinc/soritrading-watch-together"
+Source = "https://github.com/valueconnectinc/soritrading-watch-together/tree/main/python"
+Issues = "https://github.com/valueconnectinc/soritrading-watch-together/issues"
+
+[tool.setuptools]
+packages = ["watch_together"]

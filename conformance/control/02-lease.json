@@ -1,0 +1,103 @@
+{
+  "name": "an entry expires at receivedAt + ttlMs unless renewed",
+  "uses": [],
+  "steps": [
+    {
+      "at": 1000,
+      "control": {
+        "v": 1,
+        "boot": "b1",
+        "epoch": 7,
+        "frozen": {},
+        "notice": null,
+        "yield": {
+          "binance": {
+            "level": "hard",
+            "why": [
+              "focus"
+            ],
+            "ttlMs": 30000
+          }
+        }
+      }
+    },
+    {
+      "at": 30999,
+      "expect": {
+        "level": {
+          "binance": "hard"
+        }
+      }
+    },
+    {
+      "at": 31000,
+      "expect": {
+        "level": {
+          "binance": "free"
+        }
+      }
+    },
+    {
+      "at": 40000,
+      "control": {
+        "v": 1,
+        "boot": "b1",
+        "epoch": 7,
+        "frozen": {},
+        "notice": null,
+        "yield": {
+          "binance": {
+            "level": "hard",
+            "why": [
+              "focus"
+            ],
+            "ttlMs": 30000
+          }
+        }
+      }
+    },
+    {
+      "at": 59999,
+      "expect": {
+        "level": {
+          "binance": "hard"
+        }
+      }
+    },
+    {
+      "at": 60000,
+      "control": {
+        "v": 1,
+        "boot": "b1",
+        "epoch": 7,
+        "frozen": {},
+        "notice": null,
+        "yield": {
+          "binance": {
+            "level": "hard",
+            "why": [
+              "focus"
+            ],
+            "ttlMs": 30000
+          }
+        }
+      }
+    },
+    {
+      "at": 89999,
+      "expect": {
+        "level": {
+          "binance": "hard"
+        }
+      }
+    },
+    {
+      "at": 90000,
+      "expect": {
+        "level": {
+          "binance": "free"
+        }
+      }
+    }
+  ]
+}

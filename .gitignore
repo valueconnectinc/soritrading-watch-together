@@ -1,0 +1,22 @@
+# API tokens and local secrets — never commit
+*.token
+.env
+.env.*
+
+# dependencies and build output
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+target/
+Cargo.lock
+bin/
+obj/
+
+# editors and OS
+.DS_Store
+.idea/
+.vscode/
+

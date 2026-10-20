@@ -1,0 +1,8 @@
+{
+  "name": "an agent without the control plane stays unknown — never free",
+  "uses": ["binance"],
+  "steps": [
+    { "at": 0, "unsupported": true },
+    { "at": 1000, "expect": { "known": false, "level": { "binance": "unknown", "okx": "unknown" }, "acks": [] } }
+  ]
+}

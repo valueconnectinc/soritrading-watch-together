@@ -1,0 +1,20 @@
+[package]
+name = "soritrading-watch-together"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Value Connect Global Inc."]
+description = "Client for the SoriTrading agent's local API: WATCH TOGETHER signals and exchange rate-limit coordination"
+repository = "https://github.com/valueconnectinc/soritrading-watch-together"
+homepage = "https://github.com/valueconnectinc/soritrading-watch-together"
+readme = "README.md"
+keywords = ["trading", "websocket", "sse", "rate-limit"]
+categories = ["api-bindings", "network-programming"]
+include = ["src/**", "tests/**", "README.md", "LICENSE", "Cargo.toml"]
+
+[lib]
+name = "watch_together"
+
+[dependencies]
+serde_json = "1"
+tungstenite = { version = "0.30", default-features = false, features = ["handshake"] }

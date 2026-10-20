@@ -1,0 +1,10 @@
+{
+  "name": "an expired lease is a level change too — acknowledged with the last epoch",
+  "uses": ["binance"],
+  "steps": [
+    { "at": 0, "control": { "v": 1, "boot": "b1", "epoch": 9, "frozen": {}, "notice": null, "yield": {
+        "binance": { "level": "soft", "why": ["focus-soon"], "ttlMs": 30000 } } } },
+    { "at": 0, "expect": { "acks": [ { "epoch": 9, "ex": "binance", "level": "soft" } ] } },
+    { "at": 30000, "expect": { "level": { "binance": "free" }, "acks": [ { "epoch": 9, "ex": "binance", "level": "free" } ] } }
+  ]
+}
