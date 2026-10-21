@@ -24,13 +24,13 @@ The network is peer-to-peer (libp2p). The SoriTrading server only introduces pee
 - **Read-only.** No order, key, balance or strategy operation exists. Your program places its own orders with its own keys.
 - **Confirmed signals only.** Every hit is re-checked by the agent with its own exchange data. No prices are sent — only which symbol and which bar.
 - **Contribution required.** Signals are served only while the agent is contributing to the network. The control plane is answered regardless.
-- **Local.** The listeners bind to `127.0.0.1`. Reach them from elsewhere through an SSH tunnel.
+- **Local.** The listeners bind to `127.0.0.1`. To use them from another machine, see [Use from another machine](#use-from-another-machine).
 
 ## Install the agent
 
-The connectors talk to a SoriTrading agent on the same machine. Install it once (Linux or macOS, Node.js 22+ — the script installs Node if needed):
+The connectors talk to a SoriTrading agent. Your program and the agent usually run on the same machine; if they don't, see [Use from another machine](#use-from-another-machine). Install the agent once (Linux or macOS, Node.js 22+ — the script installs Node if needed):
 
-**With a SoriTrading account** — get a connect code on the website (*Agents* page), then:
+**With a SoriTrading account (recommended)** — the account is free, and you manage the agent from the website: status, logs and settings in one place, no SSH needed for day-to-day checks. Get a connect code on the website (*Agents* page), then:
 
 ```sh
 curl -fsSL https://soritrading.com/dl/install.sh | bash -s -- <connect-code>
@@ -69,7 +69,33 @@ curl -s -H "Authorization: Bearer $(cat ~/.soritrading-agent/local-api.token)" h
 
 `gate.ok: false` with a `reason` means the agent is not contributing yet (for example `no-peers`, `share-off`) — status, usage and the control plane still answer; signals start once it joins.
 
-To reach the listener from another machine, use an SSH tunnel (`ssh -L 27719:127.0.0.1:27719 user@host`) — never expose it directly.
+### Use from another machine
+
+The listeners only accept connections on `127.0.0.1`. Never bind them to a public address in plain text — the token would cross the network unencrypted. Two ways to reach them from another machine:
+
+**1. SSH tunnel (recommended).** On the machine where your program runs:
+
+```sh
+ssh -N -L 27719:127.0.0.1:27719 -L 27720:127.0.0.1:27720 user@agent-host
+```
+
+Your program then connects to `http://127.0.0.1:27719` / `ws://127.0.0.1:27720/v1` as if the agent were local. Copy the token once from the agent host (`scp user@agent-host:.soritrading-agent/local-api.token .`).
+
+Keep the **same port number on both ends**. The listeners check the `Host` header against their own port (protection against DNS rebinding), so a tunnel from local port 31000 to 27719 is refused with `421 bad-host`.
+
+**2. TLS reverse proxy (for long-running services).** Keep the listener on loopback and put nginx or Caddy on the agent host in front of it. The proxy terminates TLS, so clients use `https://` / `wss://`. It must forward the loopback `Host` value:
+
+```nginx
+location /v1 {
+  proxy_pass http://127.0.0.1:27720;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host 127.0.0.1:27720;
+}
+```
+
+Restrict who can reach the proxy (firewall or client certificates). The token alone is the only lock otherwise. Requests that carry an `Origin` header (browser pages) are always refused.
 
 ## Two transports, one client
 
