@@ -4,12 +4,74 @@ Client libraries for the **SoriTrading agent's local API**: let your own program
 
 > **Status: not released yet.** Protocol v1 (signals, conditions and the [control plane](docs/control-plane.md)) is implemented in the agent; field names may still change before the first release.
 
+## What is WATCH TOGETHER?
+
+Every exchange limits how many requests one API key may send. That is enough to follow a handful of symbols, not to check a condition across every market every minute.
+
+WATCH TOGETHER splits that work across many SoriTrading agents:
+
+1. **You describe a condition, not a price feed** — e.g. "RSI(14) on 1h below 30 and volume above its 20-bar average". Conditions are declarative (data, not code).
+2. **Agents scan their share of the market** with the spare part of their own API limit. Your own trading and data always come first; the network only gets what is left.
+3. **Only the result travels**: "symbol X met condition C on bar t". No prices, candles or order books are shared.
+4. **You never trust a stranger's claim.** Before a signal reaches you, *your* agent re-checks that one symbol with *your* exchange data. Only confirmed signals are delivered; refuted or unverifiable ones are dropped.
+
+The network is peer-to-peer (libp2p). The SoriTrading server only introduces peers and assigns scan shards; it does not see your keys and does not relay prices.
+
+**Contribution comes first.** Signals are served only while your agent is taking part in the network (connected to peers, sharing spare quota). The control plane and usage numbers are answered regardless.
+
 ## What the API is — and is not
 
 - **Read-only.** No order, key, balance or strategy operation exists. Your program places its own orders with its own keys.
 - **Confirmed signals only.** Every hit is re-checked by the agent with its own exchange data. No prices are sent — only which symbol and which bar.
 - **Contribution required.** Signals are served only while the agent is contributing to the network. The control plane is answered regardless.
 - **Local.** The listeners bind to `127.0.0.1`. Reach them from elsewhere through an SSH tunnel.
+
+## Install the agent
+
+The connectors talk to a SoriTrading agent on the same machine. Install it once (Linux or macOS, Node.js 22+ — the script installs Node if needed):
+
+**With a SoriTrading account** — get a connect code on the website (*Agents* page), then:
+
+```sh
+curl -fsSL https://soritrading.com/dl/install.sh | bash -s -- <connect-code>
+```
+
+**Without an account** — WATCH TOGETHER and the local admin UI only (requires a recent install script):
+
+```sh
+curl -fsSL https://soritrading.com/dl/install.sh | bash -s -- --standalone
+```
+
+Both install the agent (`soritrading-agent`) and the P2P daemon (`soritrading-p2p`, its own system user, no keys) as services. The script verifies the release signature before installing. Update later with the command the script prints (`node ~/soritrading-agent/agent/agent.js https://soritrading.com --update`).
+
+### Turn on a listener for your program
+
+Both listeners are off by default and bind to `127.0.0.1` only. You need one of them; REST is enough.
+
+**REST (agent, port 27719)** — Linux (systemd):
+
+```sh
+sudo systemctl edit soritrading-agent
+#   add these two lines, save:
+#   [Service]
+#   Environment=SORITRADING_LOCAL_API=1
+sudo systemctl restart soritrading-agent
+cat ~/.soritrading-agent/local-api.token     # the token for your program
+```
+
+The override survives `--update`. On macOS add `SORITRADING_LOCAL_API` = `1` to `EnvironmentVariables` in `~/Library/LaunchAgents/com.soritrading.agent.plist` and reload it (`launchctl unload` / `launchctl load`); `--update` rewrites that file, so add it again after an update.
+
+**WebSocket (P2P daemon, port 27720)** — re-run the install script with `--update --p2p-ws`; it prints the address and the command that shows `ws-api.token`.
+
+### Check it
+
+```sh
+curl -s -H "Authorization: Bearer $(cat ~/.soritrading-agent/local-api.token)" http://127.0.0.1:27719/v1/status
+```
+
+`gate.ok: false` with a `reason` means the agent is not contributing yet (for example `no-peers`, `share-off`) — status, usage and the control plane still answer; signals start once it joins.
+
+To reach the listener from another machine, use an SSH tunnel (`ssh -L 27719:127.0.0.1:27719 user@host`) — never expose it directly.
 
 ## Two transports, one client
 
