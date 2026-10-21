@@ -1,6 +1,6 @@
 {
   "name": "soritrading-watch-together",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WATCH TOGETHER connector for JavaScript/TypeScript — signals, conditions and exchange rate-limit coordination with a local SoriTrading agent.",
   "license": "MIT",
   "author": "Value Connect Global Inc.",

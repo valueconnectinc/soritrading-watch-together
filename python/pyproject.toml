@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "soritrading-watch-together"
-version = "0.1.0"
+version = "0.1.1"
 description = "Client for the SoriTrading agent's local API: WATCH TOGETHER signals and exchange rate-limit coordination"
 readme = "README.md"
 license = { text = "MIT" }

@@ -3,14 +3,14 @@
 Maven Central: `io.github.valueconnectinc:soritrading-watch-together`
 
 ```kotlin
-implementation("io.github.valueconnectinc:soritrading-watch-together:0.1.0")   // Gradle
+implementation("io.github.valueconnectinc:soritrading-watch-together:0.1.1")   // Gradle
 ```
 
 ```xml
 <dependency>
   <groupId>io.github.valueconnectinc</groupId>
   <artifactId>soritrading-watch-together</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
