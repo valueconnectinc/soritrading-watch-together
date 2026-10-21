@@ -44,24 +44,22 @@ curl -fsSL https://soritrading.com/dl/install.sh | bash -s -- --standalone
 
 Both install the agent (`soritrading-agent`) and the P2P daemon (`soritrading-p2p`, its own system user, no keys) as services. The script verifies the release signature before installing. Update later with the command the script prints (`node ~/soritrading-agent/agent/agent.js https://soritrading.com --update`).
 
-### Turn on a listener for your program
+### Listeners — on by default
 
-Both listeners are off by default and bind to `127.0.0.1` only. You need one of them; REST is enough.
+Both listeners are **on by default** and bind to `127.0.0.1` only (agent 1.374.0 / P2P daemon 1.16.0 and newer). You need one of them; REST is enough.
 
-**REST (agent, port 27719)** — Linux (systemd):
+| | REST (agent) | WebSocket (P2P daemon) |
+|---|---|---|
+| Address | `http://127.0.0.1:27719` | `ws://127.0.0.1:27720/v1` |
+| Token | `~/.soritrading-agent/local-api.token` | `ws-api.token` in the daemon state folder — the install script prints the command that shows it |
+| Turn off | `SORITRADING_LOCAL_API=0` in the agent's environment | `--no-p2p-ws` when you run the install script (kept across `--update`) |
+| Move | `SORITRADING_LOCAL_API_PORT=<port>` | `--p2p-ws=<port>` |
+
+Older installs: re-run the install script once with `--update` — it updates the agent and the daemon:
 
 ```sh
-sudo systemctl edit soritrading-agent
-#   add these two lines, save:
-#   [Service]
-#   Environment=SORITRADING_LOCAL_API=1
-sudo systemctl restart soritrading-agent
-cat ~/.soritrading-agent/local-api.token     # the token for your program
+curl -fsSL https://soritrading.com/dl/install.sh | bash -s -- --update
 ```
-
-The override survives `--update`. On macOS add `SORITRADING_LOCAL_API` = `1` to `EnvironmentVariables` in `~/Library/LaunchAgents/com.soritrading.agent.plist` and reload it (`launchctl unload` / `launchctl load`); `--update` rewrites that file, so add it again after an update.
-
-**WebSocket (P2P daemon, port 27720)** — re-run the install script with `--update --p2p-ws`; it prints the address and the command that shows `ws-api.token`.
 
 ### Check it
 
