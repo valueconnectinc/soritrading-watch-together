@@ -1,6 +1,18 @@
 # soritrading-watch-together (Java / Kotlin)
 
-Not on Maven Central yet — build from source with `java tools/Build.java` (JDK 11+) and put `build/classes` on your classpath.
+Maven Central: `io.github.valueconnectinc:soritrading-watch-together`
+
+```kotlin
+implementation("io.github.valueconnectinc:soritrading-watch-together:0.1.0")   // Gradle
+```
+
+```xml
+<dependency>
+  <groupId>io.github.valueconnectinc</groupId>
+  <artifactId>soritrading-watch-together</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
 
 Java 11+, no dependencies (`java.net.http` for HTTP and WebSocket). Package `watchtogether`.
 
@@ -29,4 +41,4 @@ api.guard.on("binance") { e -> bot.setPolling(e.level) }
 - Listeners run on one internal thread — do not block inside them. Request methods block the caller.
 - Errors are `ApiError` with a machine-readable `code` (and `reason` for `not-contributing`).
 
-Build and run the shared vectors without Gradle or Maven: `java tools/Build.java` (needs a JDK).
+Build and run the shared vectors without Gradle or Maven: `java tools/Build.java` (needs a JDK). `pom.xml` is used only to publish.
