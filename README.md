@@ -129,7 +129,7 @@ await api.guard.clear('binance');                           // waits while 'hard
 | Go | `go get github.com/valueconnectinc/soritrading-watch-together/go` |
 | C# | `dotnet add package SoriTrading.WatchTogether` |
 | Rust | `cargo add soritrading-watch-together` (library `watch_together`) |
-| Java / Kotlin | from source (`jvm/`), Maven Central later |
+| Java / Kotlin | Maven `io.github.valueconnectinc:soritrading-watch-together` |
 
 ## Languages
 

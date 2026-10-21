@@ -1,7 +1,8 @@
 name: release
 
 # Push a tag `vX.Y.Z` to publish every package at that version.
-# Authentication is trusted publishing (GitHub OIDC) — no long-lived registry tokens are stored in this repository.
+# Authentication is trusted publishing (GitHub OIDC) — no long-lived registry tokens are stored in this repository,
+# except for Maven Central, which has no trusted publishing: it uses a Central Portal token and a GPG key (repository secrets).
 # Go needs no registry: push the matching `go/vX.Y.Z` tag and the Go module proxy picks it up.
 
 on:
@@ -29,6 +30,7 @@ jobs:
           check python/pyproject.toml  "$(sed -n 's/^version = "\(.*\)"/\1/p' python/pyproject.toml)"
           check rust/Cargo.toml        "$(sed -n 's/^version = "\(.*\)"/\1/p' rust/Cargo.toml | head -1)"
           check dotnet/WatchTogether   "$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' dotnet/WatchTogether/WatchTogether.csproj)"
+          check jvm/pom.xml            "$(sed -n 's:^  <version>\(.*\)</version>:\1:p' jvm/pom.xml)"
           exit $fail
 
   npm:
@@ -104,3 +106,25 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
       - run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+
+  maven:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+      - run: java tools/Build.java
+        working-directory: jvm
+      - run: mvn -B -P release deploy
+        working-directory: jvm
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
