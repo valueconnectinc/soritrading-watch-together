@@ -10,10 +10,12 @@ All packages share one version. Publishing runs in GitHub Actions (`.github/work
 | PyPI | `soritrading-watch-together` | **Publishing → Add a pending publisher** (works before the project exists): owner `valueconnectinc`, repository `soritrading-watch-together`, workflow `release.yml`, environment empty. |
 | crates.io | `soritrading-watch-together` | The first version must be published once by hand (`cargo publish` in `rust/`). Then crate **Settings → Trusted Publishing**: repository `valueconnectinc/soritrading-watch-together`, workflow `release.yml`. |
 | NuGet | `SoriTrading.WatchTogether` | **Trusted Publishing → Add policy**: repository owner `valueconnectinc`, repository `soritrading-watch-together`, workflow file `release.yml`. In GitHub, add the repository secret `NUGET_USER` = your nuget.org profile name (not the e-mail). |
-| Maven Central | `io.github.valueconnectinc:soritrading-watch-together` | No trusted publishing here, so this one uses secrets. At [central.sonatype.com](https://central.sonatype.com): sign in with the `valueconnectinc` GitHub account — the namespace `io.github.valueconnectinc` is then verified automatically — and **View Account → Generate User Token**. Create a GPG key and send the public key to `keyserver.ubuntu.com`. In GitHub, add the repository secrets `MAVEN_CENTRAL_USERNAME` / `MAVEN_CENTRAL_PASSWORD` (the token's two halves), `MAVEN_GPG_KEY` (the ASCII-armored private key) and `MAVEN_GPG_PASSPHRASE`. Published versions can never be removed or changed. |
+| Maven Central | `io.github.valueconnectinc:soritrading-watch-together` | No trusted publishing here, so this one uses secrets. At [central.sonatype.com](https://central.sonatype.com): **Register New Namespace** `io.github.valueconnectinc` and prove ownership by creating an empty public repository named after the verification key under the `valueconnectinc` GitHub account (delete it once verified; signing in with that GitHub account verifies it directly). Then **View Account → Generate User Token**. Create a GPG key and send the public key to `keys.openpgp.org` or `keyserver.ubuntu.com`. In GitHub, add the repository secrets `MAVEN_CENTRAL_USERNAME` / `MAVEN_CENTRAL_PASSWORD` (the token's two halves), `MAVEN_GPG_KEY` (the ASCII-armored private key) and `MAVEN_GPG_PASSPHRASE`. Published versions can never be removed or changed. |
 | Go | `github.com/valueconnectinc/soritrading-watch-together/go` | Nothing — the Go module proxy reads tags. |
 
 Before a hand-published first version, copy the root `LICENSE` into the package folder (the workflow does this itself).
+
+A version published by hand cannot be published again, so the first tag after a hand publish must carry the **next** version — otherwise that registry's job fails. This setup was done on 2026-10-22: npm and crates.io have 0.1.0 by hand, and every registry got 0.1.1 from the workflow.
 
 ## Each release
 
@@ -21,9 +23,9 @@ Before a hand-published first version, copy the root `LICENSE` into the package 
 2. Commit, then tag and push both tags:
 
    ```sh
-   git tag v0.1.0
-   git tag go/v0.1.0      # Go reads tags with the module's folder as prefix
-   git push origin v0.1.0 go/v0.1.0
+   git tag v0.1.2
+   git tag go/v0.1.2      # Go reads tags with the module's folder as prefix
+   git push origin v0.1.2 go/v0.1.2
    ```
 
 3. Watch the `release` workflow. Each job runs the conformance vectors for its language before it publishes.

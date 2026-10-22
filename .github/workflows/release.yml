@@ -121,7 +121,7 @@ jobs:
           server-password: MAVEN_CENTRAL_PASSWORD
       - run: java tools/Build.java
         working-directory: jvm
-      - name: mvn deploy (skipped until the Maven Central secrets exist — see RELEASING.md)
+      - name: mvn deploy (skipped if the Maven Central secrets are missing — see RELEASING.md)
         run: |
           if [ -z "$MAVEN_CENTRAL_USERNAME" ]; then echo "::warning::MAVEN_CENTRAL_USERNAME is not set; Maven Central publish skipped"; exit 0; fi
           mvn -B -P release deploy
